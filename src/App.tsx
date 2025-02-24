@@ -27,10 +27,10 @@ export const App = () => {
     getUsers().then(setUsersList);
   }, []);
 
-  const getPostList = () => {
+  const getPostList = (id: number) => {
     setIsLoading(true);
 
-    getPosts(user?.id)
+    getPosts(id)
       .then(posts => setPostsList(posts))
       .catch(() => setIsError(true))
       .finally(() => {

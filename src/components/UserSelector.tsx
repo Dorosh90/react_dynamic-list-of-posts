@@ -1,12 +1,11 @@
 import classNames from 'classnames';
 import { useState } from 'react';
 import { User } from '../types/User';
-import { getUser } from '../api/posts';
 
 interface Props {
   usersList: User[];
   setUser: (user: User) => void;
-  getPostList: () => void;
+  getPostList: (id: number) => void;
 }
 
 export const UserSelector: React.FC<Props> = ({
@@ -16,9 +15,9 @@ export const UserSelector: React.FC<Props> = ({
 }) => {
   const [dropdownIsActive, setDropdowmIsActive] = useState(false);
 
-  const getUserById = async (id: string) => {
-    return getUser(id).then(setUser);
-  };
+  // const getUserById = async (id: string) => {
+  //   return getUser(id).then(setUser);
+  // };
 
   return (
     <div
@@ -54,8 +53,8 @@ export const UserSelector: React.FC<Props> = ({
               href={`#user-${user.id}`}
               className="dropdown-item"
               onMouseDown={() => {
-                getUserById(`${+user.id}`);
-                getPostList();
+                setUser(user);
+                getPostList(user.id);
               }}
             >
               {user.name}
