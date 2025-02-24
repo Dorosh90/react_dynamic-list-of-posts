@@ -2,10 +2,14 @@ import { client } from '../../src/utils/fetchClient';
 import { Post } from '../types/Post';
 import { User } from '../types/User';
 
-export const getUsers = () => {
-  return client.get<User[]>('/users');
+export const getUsers = async () => {
+  const users = await client.get<User[]>('/users');
+
+  return users;
 };
 
-export const getPosts = (id: number | undefined) => {
-  return client.get<Post[]>(`/posts?userId=${id}`);
+export const getPosts = async (id: number | undefined) => {
+  const posts = await client.get<Post[]>(`/posts?userId=${id}`);
+
+  return posts;
 };

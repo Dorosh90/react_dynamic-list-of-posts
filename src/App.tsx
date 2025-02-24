@@ -5,38 +5,18 @@ import './App.scss';
 import { PostsList } from './components/PostsList';
 //import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
-import { Loader } from './components/Loader';
 import { useEffect, useState } from 'react';
 import { User } from './types/User';
-import { getPosts, getUsers } from './api/posts';
-import { Post } from './types/Post';
+import { getUsers } from './api/posts';
 
 export const App = () => {
   const [usersList, setUsersList] = useState<User[]>([]);
-  const [postsList, setPostsList] = useState<Post[]>([]);
   const [user, setUser] = useState<User>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  //const [isHadPost, setIsHadPost] = useState(false)
-
-  const filteredPostsList = () => {
-    return postsList.filter(post => post.userId === user?.id);
-  };
+  const selectedUserId = user?.id;
 
   useEffect(() => {
     getUsers().then(setUsersList);
   }, []);
-
-  const getPostList = (id: number) => {
-    setIsLoading(true);
-
-    getPosts(id)
-      .then(posts => setPostsList(posts))
-      .catch(() => setIsError(true))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
 
   return (
     <main className="section">
@@ -45,39 +25,18 @@ export const App = () => {
           <div className="tile is-parent">
             <div className="tile is-child box is-success">
               <div className="block">
-                <UserSelector
-                  usersList={usersList}
-                  setUser={setUser}
-                  getPostList={getPostList}
-                />
+                <UserSelector usersList={usersList} setUser={setUser} />
               </div>
 
               <div className="block" data-cy="MainContent">
-                {filteredPostsList().length && !isError && !isLoading ? (
-                  <PostsList filteredPostsList={filteredPostsList()} />
-                ) : (
+                {!selectedUserId ? (
                   <p data-cy="NoSelectedUser">No user selected</p>
+                ) : (
+                  <PostsList selectedUserId={selectedUserId} />
                 )}
-
-                {isLoading && <Loader />}
-
-                {isError && (
-                  <div
-                    className="notification is-danger"
-                    data-cy="PostsLoadingError"
-                  >
-                    Something went wrong!
-                  </div>
-                )}
-
-                {!filteredPostsList().length && user && !isError && (
-                  <div className="notification is-warning" data-cy="NoPostsYet">
-                    No posts yet
-                  </div>
-                )}
-
-                {/*    */}
               </div>
+
+              {/*    */}
             </div>
           </div>
 

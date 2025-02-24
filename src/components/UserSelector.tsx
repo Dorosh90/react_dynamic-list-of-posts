@@ -5,19 +5,10 @@ import { User } from '../types/User';
 interface Props {
   usersList: User[];
   setUser: (user: User) => void;
-  getPostList: (id: number) => void;
 }
 
-export const UserSelector: React.FC<Props> = ({
-  usersList,
-  setUser,
-  getPostList,
-}) => {
+export const UserSelector: React.FC<Props> = ({ usersList, setUser }) => {
   const [dropdownIsActive, setDropdowmIsActive] = useState(false);
-
-  // const getUserById = async (id: string) => {
-  //   return getUser(id).then(setUser);
-  // };
 
   return (
     <div
@@ -54,7 +45,6 @@ export const UserSelector: React.FC<Props> = ({
               className="dropdown-item"
               onMouseDown={() => {
                 setUser(user);
-                getPostList(user.id);
               }}
             >
               {user.name}
