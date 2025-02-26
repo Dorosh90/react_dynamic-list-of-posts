@@ -2,17 +2,24 @@ import { useEffect, useState } from 'react';
 import { Post } from '../types/Post';
 import { getPosts } from '../api/posts';
 import { Loader } from './Loader';
+import classNames from 'classnames';
 
 interface Props {
   selectedUserId: number | undefined;
+  post: Post | null;
+  setPost: (post: Post | null) => void;
 }
-export const PostsList: React.FC<Props> = ({ selectedUserId }) => {
+export const PostsList: React.FC<Props> = ({
+  selectedUserId,
+  post,
+  setPost,
+}) => {
   const [postsList, setPostsList] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const filteredPostsList = () => {
-    return postsList.filter(post => post.userId === selectedUserId);
+    return postsList.filter(p => p.userId === selectedUserId);
   };
 
   const isHasPostsList = filteredPostsList().length;
@@ -56,23 +63,34 @@ export const PostsList: React.FC<Props> = ({ selectedUserId }) => {
             </thead>
 
             <tbody>
-              {filteredPostsList().map(post => (
-                <tr key={post.id} data-cy="Post">
-                  <td data-cy="PostId">{post.id}</td>
+              {filteredPostsList().map(filteredPost => {
+                return (
+                  <tr key={filteredPost.id} data-cy="Post">
+                    <td data-cy="PostId">{filteredPost.id}</td>
 
-                  <td data-cy="PostTitle">{post.title}</td>
+                    <td data-cy="PostTitle">{filteredPost.title}</td>
 
-                  <td className="has-text-right is-vcentered">
-                    <button
-                      type="button"
-                      data-cy="PostButton"
-                      className="button is-link is-light"
-                    >
-                      Open
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    <td className="has-text-right is-vcentered">
+                      <button
+                        type="button"
+                        data-cy="PostButton"
+                        className={classNames('button is-link', {
+                          'is-light': post?.id !== filteredPost.id,
+                        })}
+                        onClick={() => {
+                          if (post) {
+                            setPost(null);
+                          } else {
+                            setPost(filteredPost);
+                          }
+                        }}
+                      >
+                        {post?.id !== filteredPost.id ? 'Open' : 'Close'}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -1,17 +1,20 @@
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './App.scss';
+import classNames from 'classnames';
 
 import { PostsList } from './components/PostsList';
-//import { PostDetails } from './components/PostDetails';
+import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
 import { useEffect, useState } from 'react';
 import { User } from './types/User';
 import { getUsers } from './api/posts';
+import { Post } from './types/Post';
 
 export const App = () => {
   const [usersList, setUsersList] = useState<User[]>([]);
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const selectedUserId = user?.id;
 
   useEffect(() => {
@@ -25,14 +28,22 @@ export const App = () => {
           <div className="tile is-parent">
             <div className="tile is-child box is-success">
               <div className="block">
-                <UserSelector usersList={usersList} setUser={setUser} />
+                <UserSelector
+                  usersList={usersList}
+                  setUser={setUser}
+                  user={user}
+                />
               </div>
 
               <div className="block" data-cy="MainContent">
                 {!selectedUserId ? (
                   <p data-cy="NoSelectedUser">No user selected</p>
                 ) : (
-                  <PostsList selectedUserId={selectedUserId} />
+                  <PostsList
+                    selectedUserId={selectedUserId}
+                    post={post}
+                    setPost={setPost}
+                  />
                 )}
               </div>
 
@@ -40,20 +51,22 @@ export const App = () => {
             </div>
           </div>
 
-          {/* <div
+          <div
             data-cy="Sidebar"
             className={classNames(
               'tile',
               'is-parent',
               'is-8-desktop',
               'Sidebar',
-              'Sidebar--open',
+              {
+                'Sidebar--open': post,
+              },
             )}
           >
             <div className="tile is-child box is-success ">
-              <PostDetails />
+              {post && <PostDetails post={post} />}
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </main>
