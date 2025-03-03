@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Post } from '../types/Post';
-import { getPosts } from '../api/posts';
+import { getPosts } from '../api/fetchPosts';
 import { Loader } from './Loader';
 import classNames from 'classnames';
 
@@ -78,7 +78,7 @@ export const PostsList: React.FC<Props> = ({
                           'is-light': post?.id !== filteredPost.id,
                         })}
                         onClick={() => {
-                          if (post) {
+                          if (post && post === filteredPost) {
                             setPost(null);
                           } else {
                             setPost(filteredPost);

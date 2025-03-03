@@ -8,8 +8,8 @@ import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
 import { useEffect, useState } from 'react';
 import { User } from './types/User';
-import { getUsers } from './api/posts';
 import { Post } from './types/Post';
+import { getUsers } from './api/fetchPosts';
 
 export const App = () => {
   const [usersList, setUsersList] = useState<User[]>([]);
@@ -59,7 +59,7 @@ export const App = () => {
               'is-8-desktop',
               'Sidebar',
               {
-                'Sidebar--open': post,
+                'Sidebar--open': post && post.userId === user?.id,
               },
             )}
           >
